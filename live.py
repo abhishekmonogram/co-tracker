@@ -27,13 +27,13 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--checkpoint",
-        default="./checkpoints/cotracker_stride_4_wind_8.pth",
+        default="./checkpoints/cotracker_stride_8_wind_16.pth",
         help="cotracker model",
     )
     parser.add_argument(
         "--grid_size",
         type=int,
-        default=10,
+        default=30,
         help="Regular grid size"
     )
     parser.add_argument(
@@ -49,9 +49,6 @@ if __name__ == "__main__":
         exit(1)
     
     S = 8
-
-    #TODO Create segmentation mask here. And not in the video stream
-
 
     # model = CoTrackerPredictor(
     #     device=args.device,
@@ -84,9 +81,11 @@ if __name__ == "__main__":
         
         if curr_frame_count == 1:
             #trigger UI to create a segmentation mask
-            polydraw = PolygonDrawer(frame=frame, window_name='Mask Selector')
+            polydraw = PolygonDrawer(frame=preprocess_frame(frame), window_name='Mask Selector')
             segm_mask = polydraw.run()
             print(segm_mask.shape)
+            background_indices_x, background_indices_y = np.where(segm_mask!=255)[0], np.where(segm_mask!=255)[1]
+            segm_mask[background_indices_x,background_indices_y] = 0.0
             plt.imsave("polygon.png", segm_mask.astype(np.uint8))
             segm_mask = torch.from_numpy(np.expand_dims(np.mean(segm_mask,axis=-1),axis=(0,1)))
             print(segm_mask.shape)
@@ -136,7 +135,7 @@ if __name__ == "__main__":
 
             pred_tracks, pred_visibility = model(frames)
 
-            res_video = vis.visualize(frames[:,:S//2], pred_tracks[:,:S//2], pred_visibility[:,:S//2], save_video=False, query_frame=0).squeeze(0).permute(0, 2, 3, 1)
+            res_video = vis.visualize(frames[:,:S//2], pred_tracks[:,:S//2],pred_visibility[:,:S//2], segm_mask=segm_mask.to(args.device), save_video=False, query_frame=0).squeeze(0).permute(0, 2, 3, 1)
             # Convert to numpy and convert color
             res_video = np.array(res_video)
             res_video = [cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) for frame in res_video]

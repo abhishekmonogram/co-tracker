@@ -146,6 +146,9 @@ class Visualizer:
 
         res_video = []
 
+        ###############################MY CHANGE
+        segm_mask = segm_mask.cpu()
+
         # process input video
         for rgb in video:
             res_video.append(rgb.copy())
