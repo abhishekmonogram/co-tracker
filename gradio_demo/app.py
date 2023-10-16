@@ -6,6 +6,9 @@ import tqdm
 import cv2
 import gradio as gr
 
+import sys
+sys.path.append(os.getcwd())
+
 from cotracker.utils.visualizer import Visualizer, read_video_from_path
 
 

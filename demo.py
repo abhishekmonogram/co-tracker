@@ -32,10 +32,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--checkpoint",
-        default="./checkpoints/cotracker_stride_4_wind_8.pth",
+        default="./checkpoints/cotracker_stride_8_wind_16.pth",
         help="cotracker model",
     )
-    parser.add_argument("--grid_size", type=int, default=0, help="Regular grid size")
+    parser.add_argument("--grid_size", type=int, default=5, help="Regular grid size")
     parser.add_argument(
         "--grid_query_frame",
         type=int,
