@@ -11,6 +11,7 @@ from PIL import Image
 from cotracker.utils.visualizer import Visualizer, read_video_from_path
 from cotracker.predictor_live import CoTrackerPredictor
 from polygon_draw import PolygonDrawer
+import matplotlib.pyplot as plt
 
 
 def preprocess_frame(frame):
@@ -86,6 +87,7 @@ if __name__ == "__main__":
             polydraw = PolygonDrawer(frame=frame, window_name='Mask Selector')
             segm_mask = polydraw.run()
             print(segm_mask.shape)
+            plt.imsave("polygon.png", segm_mask.astype(np.uint8))
             segm_mask = torch.from_numpy(np.expand_dims(np.mean(segm_mask,axis=-1),axis=(0,1)))
             print(segm_mask.shape)
 

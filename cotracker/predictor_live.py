@@ -45,7 +45,7 @@ class CoTrackerPredictor(torch.nn.Module):
         queries=None,
         segm_mask=None,
         grid_size=0,
-        add_support_grid=False,
+        add_support_grid=True,
         grid_query_frame=0
     ):
         super().__init__()

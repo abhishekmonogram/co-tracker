@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
 
 # ============================================================================
 
@@ -72,12 +73,13 @@ class PolygonDrawer(object):
         cv2.waitKey()
 
         cv2.destroyWindow(self.window_name)
-        return self.frame.astype(bool)
+        return self.frame
 
 # ============================================================================
 
 if __name__ == "__main__":
-    pd = PolygonDrawer("Polygon")
+    img = cv2.imread('assets/apple_mask.png')
+    pd = PolygonDrawer(img,"Polygon")
     image = pd.run()
-    cv2.imwrite("polygon.png", image)
+    plt.imsave("polygon.png", image.astype(np.uint8))
     print("Polygon = %s" % pd.points)
